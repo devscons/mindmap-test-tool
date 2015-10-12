@@ -1,0 +1,20 @@
+<map version="1.0.1">
+    <!-- To view this file, download free mind mapping software FreeMind from http://freemind.sourceforge.net -->
+    <node CREATED="1383556086469" ID="ID_1910973038" MODIFIED="1422106052121" TEXT="Calculator tests">
+        <node CREATED="1383556132250" ID="ID_1085987640" MODIFIED="1385401548956" POSITION="left" TEXT="Add">
+            <node CREATED="1383557074323" ID="ID_256521276" MODIFIED="1383557341919" TEXT="Request">
+                <node CREATED="1383557231134" ID="ID_751972787" MODIFIED="1422214803912" TEXT="Method: GET"/>
+                <node CREATED="1383557247559" ID="ID_1192914768" MODIFIED="1422107224008" TEXT="Path: /api/add"/>
+            </node>
+            <node CREATED="1383556253543" ID="ID_1217429996" MODIFIED="1383913382537" TEXT="Test: simple addition">
+                <arrowlink DESTINATION="ID_1217429996" ENDARROW="Default" ENDINCLINATION="0;0;" ID="Arrow_ID_1028536754" STARTARROW="None" STARTINCLINATION="0;0;"/>
+                <arrowlink DESTINATION="ID_1217429996" ENDARROW="Default" ENDINCLINATION="0;0;" ID="Arrow_ID_1521236405" STARTARROW="None" STARTINCLINATION="0;0;"/>
+                <linktarget COLOR="#b0b0b0" DESTINATION="ID_1217429996" ENDARROW="Default" ENDINCLINATION="0;0;" ID="Arrow_ID_1028536754" SOURCE="ID_1217429996" STARTARROW="None" STARTINCLINATION="0;0;"/>
+                <linktarget COLOR="#b0b0b0" DESTINATION="ID_1217429996" ENDARROW="Default" ENDINCLINATION="0;0;" ID="Arrow_ID_1521236405" SOURCE="ID_1217429996" STARTARROW="None" STARTINCLINATION="0;0;"/>
+                <node CREATED="1383556561811" ID="ID_370003045" MODIFIED="1422106157676" TEXT="a: 6"/>
+                <node CREATED="1383556604234" ID="ID_903348920" MODIFIED="1422106159619" TEXT="b: 8"/>
+                <node CREATED="1383556627506" ID="ID_1890021932" MODIFIED="1383918526346" TEXT="result: 14"/>
+            </node>
+        </node>
+    </node>
+</map>
