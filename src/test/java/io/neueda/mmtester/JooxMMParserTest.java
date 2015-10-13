@@ -3,7 +3,6 @@ package io.neueda.mmtester;
 import org.junit.Test;
 
 import java.util.Collection;
-import java.util.Map;
 
 import static io.neueda.mmtester.JooxMMParser.withMindmap;
 import static org.junit.Assert.*;
@@ -17,7 +16,6 @@ public class JooxMMParserTest {
 
         Collection<TestCase> testCases = withMindmap("calc.mm")
                 .withHost("http://calculator.neueda.lv/api/")
-                .loadXMLToString()
                 .build();
 
         assertEquals(testCases.size(), 1);

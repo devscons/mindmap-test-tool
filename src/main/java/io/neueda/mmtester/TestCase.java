@@ -40,4 +40,38 @@ public class TestCase {
     public Map<String, String> getParams() {
         return params;
     }
+
+    @Override
+    public int hashCode() {
+        int hashCode = 37;
+        hashCode = 37 * hashCode + method.hashCode();
+        hashCode = 37 * hashCode + host.hashCode();
+        hashCode = 37 * hashCode + path.hashCode();
+        hashCode = 37 * hashCode + result.hashCode();
+        hashCode = 37 * hashCode + params.hashCode();
+        return hashCode;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof TestCase))
+            return false;
+        if (o == this)
+            return true;
+
+        TestCase that = (TestCase) o;
+
+        if ((host == null) ? (that.getHost() != null) : !host.equals(that.getHost()))
+            return false;
+        if ((method == null) ? (that.getMethod() != null) : !method.equals(that.getMethod()))
+            return false;
+        if ((path == null) ? (that.getPath() != null) : !path.equals(that.getPath()))
+            return false;
+        if ((result == null) ? (that.getResult() != null) : !result.equals(that.getResult()))
+            return false;
+        if ((params == null) ? (that.getParams() != null) : !params.equals(that.getParams()))
+            return false;
+
+        return true;
+    }
 }

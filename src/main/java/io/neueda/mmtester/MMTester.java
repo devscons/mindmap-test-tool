@@ -11,11 +11,11 @@ import static io.neueda.mmtester.Arguments.*;
 public class MMTester {
     public static void main( String[] args ){
 
-//        System.setProperty(HOST, args[0]);
-//        System.setProperty(MINDMAP, args[1]);
+        System.setProperty(HOST, args[0]);
+        System.setProperty(MINDMAP, args[1]);
 
-        System.setProperty(HOST, "http://calculator.neueda.lv");
-        System.setProperty(MINDMAP, "calc_tests.mm");
+//        System.setProperty(HOST, "http://calculator.neueda.lv");
+//        System.setProperty(MINDMAP, "calc_tests.mm");
 
         JUnitCore.main(MindmapTest.class.getCanonicalName());
     }

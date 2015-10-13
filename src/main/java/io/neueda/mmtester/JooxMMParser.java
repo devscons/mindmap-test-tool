@@ -1,7 +1,11 @@
 package io.neueda.mmtester;
 
 import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
 
@@ -11,12 +15,11 @@ import static org.joox.JOOX.$;
  * Created by cons on 12/10/15.
  */
 public class JooxMMParser implements MMParser {
+    private static final Logger logger = LoggerFactory.getLogger(JooxMMParser.class);
 
     private String pathToMindmap;
 
     private String host;
-
-    private String xml;
 
     private JooxMMParser(){
     }
@@ -25,8 +28,9 @@ public class JooxMMParser implements MMParser {
         this.pathToMindmap = pathToMindmap;
     }
 
-    public static JooxMMParser withMindmap(String pathToMindmap){
-        return new JooxMMParser(pathToMindmap);
+    public static JooxMMParser withMindmap(String path){
+        JooxMMParser parser = new JooxMMParser(path);
+        return parser;
     }
 
     public JooxMMParser withHost(String host){
@@ -34,18 +38,36 @@ public class JooxMMParser implements MMParser {
         return this;
     }
 
-    public JooxMMParser loadXMLToString(){
+    public  String loadAsFilesystem(String path){
         try {
-            xml = IOUtils.toString(getClass().getClassLoader().getResourceAsStream(pathToMindmap), "UTF-8");
-        } catch (IOException e) {
-            e.printStackTrace();
+            return IOUtils.toString(new FileReader(path));
+        } catch (FileNotFoundException e) {
+            logger.info("Mindmap is not found at {}", path);
+            return loadAsResource(path);
+        } catch (IOException ioe){
+            logger.info("Error reading mindmap at {}", path);
+            ioe.printStackTrace();
         }
-        return this;
+        return null;
+    }
+
+    public String loadAsResource(String path){
+        try {
+            if (getClass().getClassLoader().getResourceAsStream(path) == null) {
+                logger.info("Mindmap is not found at {}", path);
+            }
+            return IOUtils.toString(getClass().getClassLoader().getResourceAsStream(path), "UTF-8");
+        } catch (IOException ioe) {
+            logger.info("Error reading mindmap at {}", path);
+        }
+        return null;
     }
 
     @Override
     public Collection<TestCase> build() {
-        Collection<TestCase> testDatas = new ArrayList<>();
+        String xml = loadAsFilesystem(pathToMindmap);
+
+        Collection<TestCase> testCases = new ArrayList<>();
 
         List<String> scenarios = $(xml).xpath("//node[@TEXT=\"Request\"]/..").contents();
         for (String scenario : scenarios){
@@ -54,16 +76,28 @@ public class JooxMMParser implements MMParser {
 
             String path = $(scenario).children().filter(req -> $(req).attr("TEXT").contentEquals("Request")).children().matchTag("node").filter(pa -> $(pa).attr("TEXT").contains("Path")).attr("TEXT");
 
-            List<String> tests = $(scenario).children().filter(test -> !$(test).attr("TEXT").contentEquals("Request")).contents();
-            for (String test : tests)
-            {
-                List<String> params = $(test).children().matchTag("node").filter(pa -> !$(pa).attr("TEXT").contains("result")).attrs("TEXT");
-                String result = $(test).children().matchTag("node").filter(pa -> $(pa).attr("TEXT").contains("result")).attr("TEXT");
+            testCases.addAll(extractTestCasesFromScenario(host, method, path, scenario));
+        }
+        return testCases;
+    }
 
-                TestCase testData = new TestCase(getStringValue(method, ":"), host, getStringValue(path, ":"), getStringValue(result, ":"), buildParams(params, ":"));
+    private Collection<TestCase> extractTestCasesFromScenario(String host, String method, String path, String scenario){
+        List<String> tests = $(scenario).children().filter(test -> !$(test).attr("TEXT").contentEquals("Request")).contents();
 
-                testDatas.add(testData);
-            }
+        Collection<TestCase> testDatas = new ArrayList<>();
+        for (String test : tests)
+        {
+            List<String> params = $(test).children().matchTag("node").filter(pa -> !$(pa).attr("TEXT").contains("result")).attrs("TEXT");
+
+            String result = $(test).children().matchTag("node").filter(pa -> $(pa).attr("TEXT").contains("result")).attr("TEXT");
+
+            TestCase testData = new TestCase(getStringValue(method, ":"),
+                                            host,
+                                            getStringValue(path, ":"),
+                                            getStringValue(result, ":"),
+                                            buildParams(params, ":"));
+
+            testDatas.add(testData);
         }
         return testDatas;
     }
@@ -81,9 +115,5 @@ public class JooxMMParser implements MMParser {
 
     private String getStringValue(String keyValue, String separator){
         return keyValue.split(separator)[1].trim();
-    }
-
-    private Integer getIntegerValue(String keyValue, String separator){
-        return Integer.valueOf(getStringValue(keyValue, separator));
     }
 }
