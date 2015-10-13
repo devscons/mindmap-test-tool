@@ -5,7 +5,7 @@ import java.util.Collection;
 /**
  * Created by cons on 12/10/15.
  */
-public interface MMParser {
+public interface MindmapParser {
 
     /**
      * Parses xml string to Collection of TestData

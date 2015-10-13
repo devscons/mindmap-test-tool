@@ -4,7 +4,7 @@ import org.junit.Test;
 
 import java.util.Collection;
 
-import static io.neueda.mmtester.JooxMMParser.withMindmap;
+import static io.neueda.mmtester.MindmapDOMParser.withMindmap;
 import static org.junit.Assert.*;
 /**
  * Created by cons on 12/10/15.

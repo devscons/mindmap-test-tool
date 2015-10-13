@@ -10,30 +10,30 @@ import java.io.IOException;
 import java.util.*;
 
 import static org.joox.JOOX.$;
-
+import static org.apache.commons.lang3.StringUtils.*;
 /**
  * Created by cons on 12/10/15.
  */
-public class JooxMMParser implements MMParser {
-    private static final Logger logger = LoggerFactory.getLogger(JooxMMParser.class);
+public class MindmapDOMParser implements MindmapParser {
+    private static final Logger logger = LoggerFactory.getLogger(MindmapDOMParser.class);
 
     private String pathToMindmap;
 
     private String host;
 
-    private JooxMMParser(){
+    private MindmapDOMParser(){
     }
 
-    private JooxMMParser(String pathToMindmap){
+    private MindmapDOMParser(String pathToMindmap){
         this.pathToMindmap = pathToMindmap;
     }
 
-    public static JooxMMParser withMindmap(String path){
-        JooxMMParser parser = new JooxMMParser(path);
+    public static MindmapDOMParser withMindmap(String path){
+        MindmapDOMParser parser = new MindmapDOMParser(path);
         return parser;
     }
 
-    public JooxMMParser withHost(String host){
+    public MindmapDOMParser withHost(String host){
         this.host = host;
         return this;
     }
@@ -70,6 +70,9 @@ public class JooxMMParser implements MMParser {
         Collection<TestCase> testCases = new ArrayList<>();
 
         List<String> scenarios = $(xml).xpath("//node[@TEXT=\"Request\"]/..").contents();
+
+        if (scenarios.size() <= 0) throw new MindmapParseException("No scenarios in mindmap");
+
         for (String scenario : scenarios){
 
             String method = $(scenario).children().filter(req -> $(req).attr("TEXT").contentEquals("Request")).children().matchTag("node").filter(pa -> $(pa).attr("TEXT").contains("Method")).attr("TEXT");
@@ -105,15 +108,20 @@ public class JooxMMParser implements MMParser {
     private Map<String, String> buildParams(List<String> par, String separator){
         Map<String, String> params = new HashMap<>();
         for (String keyValue : par){
-            String[] pair = keyValue.split(separator);
-            String key = pair[0].trim();
-            String value = pair[1].trim();
+            String[] param = keyValue.split(separator);
+            if (param.length < 2) throw new MindmapParseException("param incorrect format, use " + separator + " separator");
+            String key = param[0].trim();
+            String value = param[1].trim();
+            if (isEmpty(key) || key == null) throw new MindmapParseException("param name is missing");
+            if (isEmpty(value) || value == null) throw new MindmapParseException("param value is missing");
             params.put(key, value);
         }
         return params;
     }
 
     private String getStringValue(String keyValue, String separator){
+        String[] param = keyValue.split(separator);
+        if (param.length < 2) throw new MindmapParseException("param incorrect format, use " + separator + " separator");
         return keyValue.split(separator)[1].trim();
     }
 }

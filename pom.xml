@@ -64,6 +64,12 @@
           <version>1.7.12</version>
       </dependency>
 
+      <dependency>
+          <groupId>com.google.guava</groupId>
+          <artifactId>guava</artifactId>
+          <version>18.0</version>
+      </dependency>
+
   </dependencies>
 
    <build>
@@ -83,7 +89,7 @@
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>1.2.1</version>
                 <configuration>
-                    <mainClass>io.neueda.mmtester.MMTester</mainClass>
+                    <mainClass>io.neueda.mmtester.MindmapTesterStarter</mainClass>
                     <arguments>
                         <argument>${host}</argument>
                         <argument>${mindmap}</argument>

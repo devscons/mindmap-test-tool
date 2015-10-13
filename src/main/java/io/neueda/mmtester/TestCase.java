@@ -1,5 +1,9 @@
 package io.neueda.mmtester;
 
+import com.google.common.base.MoreObjects;
+
+import static com.google.common.base.Objects.*;
+
 import java.util.Map;
 
 /**
@@ -73,5 +77,18 @@ public class TestCase {
             return false;
 
         return true;
+    }
+
+    @Override
+    public String toString() {
+        return MoreObjects.toStringHelper(this)
+                .add("host", host)
+                .add("method", method)
+                .add("path", path)
+                .add("params", params)
+                .add("expected result", result)
+                .toString();
+
+
     }
 }
