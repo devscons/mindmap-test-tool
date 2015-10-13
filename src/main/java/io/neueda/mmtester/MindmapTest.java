@@ -34,15 +34,22 @@ public class MindmapTest {
 
     @Test
     public void test(){
-        logger.info("Running test: {}", test);
 
         ResponseSpecification spec =
 
     given().
         baseUri(test.getHost()).
         params(test.getParams()).
+    log().
+        path().
+    log().
+        method().
+    log().
+        params().
     expect().
         body("result", equalTo(String.valueOf(test.getResult()))).
+    log().
+        body().
     when();
 
         doRequest(spec);
