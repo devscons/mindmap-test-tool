@@ -9,5 +9,7 @@ mvn clean install
 
 mvn exec:java - executes tests using default mindmap from resources
 
+```
 mvn exec: java -Dmindmap=path to mindmap - using your own mindmap
+```
 
