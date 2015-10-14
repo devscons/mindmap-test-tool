@@ -10,12 +10,15 @@ checkout repo
 mvn clean install
 ```
 ```
-mvn exec:java - executes tests using default mindmap from resources
+mvn exec:java - executes tests using default [mindmap] (src/main/resources/calc_tests.mm) from resources and default host http://calculator.neueda.lv
 ```
 ```
 mvn exec:java -Dmindmap=<path to mindmap> - using your own mindmap
 ```
 ```
-mvn exec:java -Dhost=<url of rest endpoint to test> -Dmindmap=<path to mindmap> - using your own mindmap
+mvn exec:java -Dmindmap=<path to mindmap> - using your own mindmap and default host
+```
+```
+mvn exec:java -Dhost=<url of rest endpoint to test> -Dmindmap=<path to mindmap> - using your own mindmap and host
 ```
 
