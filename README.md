@@ -1,5 +1,5 @@
 # Mindmap command-line test tool
-cli tests tool that eats test definitions in [mindmap] src/main/resources/calc_tests.mm format
+cli tests tool that eats test definitions in [mindmap] (src/main/resources/calc_tests.mm) format
 
 # How to run:
 
