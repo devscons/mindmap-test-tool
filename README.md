@@ -3,6 +3,8 @@ cli tests tool that eats test definitions in [mindmap] (src/main/resources/calc_
 
 And and executes tests against a remote REST service.
 
+Default host is http://calculator.neueda.lv
+
 # How to run:
 
 checkout repo
@@ -10,7 +12,7 @@ checkout repo
 mvn clean install
 ```
 ```
-mvn exec:java - executes tests using default mindmap from resources and default host http://calculator.neueda.lv
+mvn exec:java - executes tests using default mindmap from resources and default host
 ```
 ```
 mvn exec:java -Dmindmap=<path to mindmap> - using your own mindmap
