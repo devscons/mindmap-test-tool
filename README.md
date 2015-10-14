@@ -6,8 +6,12 @@ And and executes tests against a remote REST service.
 Default host is http://calculator.neueda.lv
 
 # How to run:
-
-checkout repo
+```
+git clone https://github.com/devscons/mindmap-test-tool.git
+```
+```
+cd mindmap-test-tool
+```
 ```
 mvn clean install
 ```
