@@ -11,6 +11,7 @@ import java.util.*;
 
 import static org.joox.JOOX.$;
 import static org.apache.commons.lang3.StringUtils.*;
+import static io.neueda.mmtester.MindmapDOMExtractorHelper.*;
 /**
  * Created by cons on 12/10/15.
  */
@@ -71,57 +72,38 @@ public class MindmapDOMParser implements MindmapParser {
 
         List<String> scenarios = $(xml).xpath("//node[@TEXT=\"Request\"]/..").contents();
 
-        if (scenarios.size() <= 0) throw new MindmapParseException("No scenarios in mindmap");
+        if (scenarios.size() <= 0) throw new MindmapParseException("no scenarios in mindmap");
 
         for (String scenario : scenarios){
 
-            String method = $(scenario).children().filter(req -> $(req).attr("TEXT").contentEquals("Request")).children().matchTag("node").filter(pa -> $(pa).attr("TEXT").contains("Method")).attr("TEXT");
-
-            String path = $(scenario).children().filter(req -> $(req).attr("TEXT").contentEquals("Request")).children().matchTag("node").filter(pa -> $(pa).attr("TEXT").contains("Path")).attr("TEXT");
+            String request = extractRequest(scenario);
+            String method = extractRequestMethod(request);
+            String path = extractRequestPath(request);
 
             testCases.addAll(extractTestCasesFromScenario(host, method, path, scenario));
         }
         return testCases;
     }
 
-    private Collection<TestCase> extractTestCasesFromScenario(String host, String method, String path, String scenario){
-        List<String> tests = $(scenario).children().filter(test -> !$(test).attr("TEXT").contentEquals("Request")).contents();
+    private static Collection<TestCase> extractTestCasesFromScenario(String host, String method, String path, String scenario){
+
+        List<String> tests = extractTestsFromScenario(scenario);
 
         Collection<TestCase> testDatas = new ArrayList<>();
         for (String test : tests)
         {
-            List<String> params = $(test).children().matchTag("node").filter(pa -> !$(pa).attr("TEXT").contains("result")).attrs("TEXT");
+            Map<String, String> params = extractTestParams(test);
 
-            String result = $(test).children().matchTag("node").filter(pa -> $(pa).attr("TEXT").contains("result")).attr("TEXT");
+            String result = extractTestResult(test);
 
-            TestCase testData = new TestCase(getStringValue(method, ":"),
+            TestCase testData = new TestCase(method,
                                             host,
-                                            getStringValue(path, ":"),
-                                            getStringValue(result, ":"),
-                                            buildParams(params, ":"));
+                                            path,
+                                            result,
+                                            params);
 
             testDatas.add(testData);
         }
         return testDatas;
-    }
-
-    private Map<String, String> buildParams(List<String> par, String separator){
-        Map<String, String> params = new HashMap<>();
-        for (String keyValue : par){
-            String[] param = keyValue.split(separator);
-            if (param.length < 2) throw new MindmapParseException("param incorrect format, use " + separator + " separator");
-            String key = param[0].trim();
-            String value = param[1].trim();
-            if (isEmpty(key) || key == null) throw new MindmapParseException("param name is missing");
-            if (isEmpty(value) || value == null) throw new MindmapParseException("param value is missing");
-            params.put(key, value);
-        }
-        return params;
-    }
-
-    private String getStringValue(String keyValue, String separator){
-        String[] param = keyValue.split(separator);
-        if (param.length < 2) throw new MindmapParseException("param incorrect format, use " + separator + " separator");
-        return keyValue.split(separator)[1].trim();
     }
 }
